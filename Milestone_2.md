@@ -1,5 +1,5 @@
 ---
-title: "Background Knowledge: Distributed ML"
+title: "Distributed Machine Learning: A Comprehensive Review and Theoretical Approach to Enhancing Data Privacy & Security"
 author:
   - Mark Lekina Rorat
   - Destin Niyomufasha
@@ -24,7 +24,22 @@ toc: false
 - *Geographical Distribution*: Trains on locally stored data, addressing privacy and bandwidth issues.
 - *Fault tolerance*: Offers system resilience to node failures and scalable training capabilities.
 
-# Outline
+# Table of Contents
+
+- Background
+  - Model vs. data parallelism
+  - Centralized vs. decentralized optimization
+  - Synchronous vs. asynchronous scheduling
+  - Communication pattern used for exchanging parameters.
+- Security and Data Privacy in Distributed ML
+  - Proof of Learning
+  - Limitations of Proof of Learning
+- Novelty: Proof of Learning + Homomorphic Encryption
+  - Homomorphic Encryption
+  - Our Approach
+  - Limitations of our approach
+
+# Background
 
 - **Model vs. data parallelism**
 - Centralized vs. decentralized optimization
@@ -168,3 +183,39 @@ toc: false
 - Resilient to node failures, with good scalability.
 - Ideal for decentralized training where strict order or central coordination is challenging.
 - Convergence, however, may be slower or less predictable.
+
+# Security and Data Privacy in Distributed ML
+
+- Proof of Learning
+- Limitations of Proof of Learning
+
+# Proof of Learning
+
+- In distributed ML, workers can be untrusted, and the model owner needs to verify that the workers have performed the required verifiable computations to obtain the model parameters.
+- *Verifiable computation*: The proof should be verifiable by the model owner with high probability, ensuring that the worker has not cheated.
+- *Key idea*: Verify the integrity of the training procedure used to obtain a machine-learning model as a means of ensuring adversarial workers do not poison the central model by sending corrupt gradient updates to the parameter server or other workers.
+
+# Proof of Learning
+
+- With high probability, the parameter server can verify the proof and easily detect a dishonest worker.
+- Verification process is computationally less expensive and model agnostic.
+- An adversary cannot easily reconstruct secret information associated with the proof of learning since the computational cost should (ideally) be at least the same the cost of valid proof generation.
+
+# PoL Generation Algorithm
+
+![PoL Generation ^[Source: [https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9519402](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9519402)]](figures/pol_generation.png)
+
+# PoL Verification Algorithm
+
+![PoL Verification ^[Source: [https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9519402](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9519402)]](figures/pol_verification.png)
+
+# Limitations of Proof of Learning
+
+- Should we blindly trust the verifier (parameter server)?
+- Does the *gradient sharing* scheme protect the privacy of the training datasets of each participant?
+- The *gradient sharing* scheme is not secure against a malicious verifier (parameter server) who can reconstruct the private data from the gradients.
+- It is possible to obtain the private data used in training from the provided gradients (Deep Leakage, Xu, et al.^[[https://proceedings.neurips.cc/paper/2019/file/60a6c4002cc7b29142def8871531281a-Paper.pdf](https://proceedings.neurips.cc/paper/2019/file/60a6c4002cc7b29142def8871531281a-Paper.pdf)])
+
+# Deep Leakage Algorithm
+
+![Approximating Training features from Gradients ^[Source: [https://proceedings.neurips.cc/paper/2019/file/60a6c4002cc7b29142def8871531281a-Paper.pdf](https://proceedings.neurips.cc/paper/2019/file/60a6c4002cc7b29142def8871531281a-Paper.pdf)]](figures/deep_leakage.png)
